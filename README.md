@@ -1,20 +1,16 @@
-# pokedex-ui
+# Pokedex UI
 
-## Build Setup
+This web application about encyclopedia of Pokemon, it can search by Pokedex Number  
+and name of the Pokemon. Not only that it's also show about stats and image of the Pokemon.
+
+## Environment
+
+## Development
 
 ```bash
-# install dependencies
 $ npm install
-
 # serve with hot reload at localhost:3000
 $ npm run dev
-
-# build for production and launch server
-$ npm run build
-$ npm run start
-
-# generate static project
-$ npm run generate
 ```
 
-For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
+## Production
