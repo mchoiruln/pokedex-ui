@@ -123,9 +123,7 @@ export default {
     async signout() {
       try {
         await this.$fire.signOut(this.$fire.auth)
-        await this.$router.push({
-          name: 'login',
-        })
+        await this.$router.push('/login')
       } catch (error) {
         alert(error.message)
       } finally {
