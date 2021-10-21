@@ -58,7 +58,7 @@
         <div class="border-t-2 border-gray-200 bg-gray-50">
           <p class="m-4">
             Have An Account?
-            <nuxt-link to="Login" class="underline">Log in</nuxt-link>
+            <nuxt-link to="/login" class="underline">Log in</nuxt-link>
           </p>
         </div>
       </FormulateForm>
@@ -71,6 +71,7 @@
 
 <script>
 export default {
+  auth: false,
   data() {
     return {
       formData: {

@@ -50,7 +50,7 @@
         <div class="border-t-2 border-gray-200 bg-gray-50">
           <p class="m-4">
             Don’t Have An Account?
-            <nuxt-link to="Register" class="underline">Sign Up</nuxt-link>
+            <nuxt-link to="/register" class="underline">Sign Up</nuxt-link>
           </p>
         </div>
       </FormulateForm>
