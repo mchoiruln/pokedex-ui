@@ -11,7 +11,7 @@ export default {
   },
 
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
-  ssr: true,
+  ssr: false,
 
   // Target: https://go.nuxtjs.dev/config-target
   target: 'static',
@@ -59,6 +59,11 @@ export default {
     // https://go.nuxtjs.dev/pwa
     '@nuxtjs/pwa',
   ],
+
+  // Middleware of Router
+  router: {
+    middleware: ['auth'],
+  },
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {},

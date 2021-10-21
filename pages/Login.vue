@@ -14,7 +14,6 @@
 
     <div class="flex flex-col flex-grow w-full">
       <FormulateForm
-        v-model="formData"
         name="login"
         class="
           flex flex-col
@@ -33,18 +32,19 @@
         <FormulateInput
           name="email"
           label="Email"
-          validation="required|email"
+          avalidation="required|email"
         />
         <FormulateInput
           name="password"
           label="Password"
           type="password"
-          validation="required"
+          aalidation="required"
         />
-        <FormulateErrors />
+        <FormulateErrors class="text-red-700 text-xs mb-1" />
         <FormulateInput
           type="submit"
-          label="Login"
+          :disabled="isLoading"
+          :label="isLoading ? 'Loading...' : 'Login'"
           input-class="px-4 py-2 rounded bg-blue-500 text-white hover:bg-blue-600"
         />
         <div class="border-t-2 border-gray-200 bg-gray-50">
@@ -63,17 +63,30 @@
 
 <script>
 export default {
+  auth: false,
   data() {
     return {
-      formData: {
-        email: null,
-        password: null,
-      },
+      isLoading: false,
     }
   },
   methods: {
-    submitHandler(data) {
-      // TODO: try login to firebase
+    async submitHandler(data) {
+      try {
+        this.isLoading = true
+        const res = await this.$fire.signInWithEmailAndPassword(
+          this.$fire.auth,
+          data.email,
+          data.password
+        )
+        localStorage.setItem('token', res.user.accessToken)
+        await this.$router.push({
+          name: 'index',
+        })
+      } catch (err) {
+        this.$formulate.handle({ formErrors: err.message }, 'login')
+      } finally {
+        this.isLoading = false
+      }
     },
   },
 }

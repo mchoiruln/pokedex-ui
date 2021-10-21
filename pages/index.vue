@@ -1,6 +1,14 @@
 <template>
   <div class="flex flex-col min-h-screen p-10 bg-gray-100 text-gray-800">
-    <h1 class="text-3xl">Pokedex</h1>
+    <div class="flex justify-between mb-6">
+      <h1 class="text-3xl">Pokedex</h1>
+      <button
+        class="px-2 py-1 rounded bg-pink-500 text-white hover:bg-pink-600"
+        @click="signout"
+      >
+        Sign out
+      </button>
+    </div>
     <div class="flex border flex-col">
       <div class="flex self-start border-red-400">
         <FormulateInput
@@ -111,7 +119,18 @@ export default {
       if (this.isInfiniteScroll) {
         this.pushRandom()
       }
-      console.log('intersected')
+    },
+    async signout() {
+      try {
+        await this.$fire.signOut(this.$fire.auth)
+        await this.$router.push({
+          name: 'login',
+        })
+      } catch (error) {
+        alert(error.message)
+      } finally {
+        localStorage.removeItem('token', null)
+      }
     },
     scrollToTop() {
       window.scrollTo(0, 0)
