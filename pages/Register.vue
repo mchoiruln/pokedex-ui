@@ -32,9 +32,9 @@
           Create new Account
         </h2>
         <FormulateInput
-          name="fullName"
+          name="displayName"
           label="Full Name"
-          validation="required|email"
+          validation="required"
         />
         <FormulateInput
           name="email"
@@ -45,16 +45,21 @@
           name="password"
           label="Password"
           type="password"
-          validation="required"
+          validation="required|min:6,length"
         />
         <FormulateInput
           name="confirmPassword"
           label="Confirm Password"
           type="password"
-          validation="required"
+          validation="required|confirm:password"
+          validation-name="Password confirmation"
         />
         <FormulateErrors />
-        <FormulateInput type="submit" label="Register" />
+        <FormulateInput
+          type="submit"
+          :disabled="isLoading"
+          :label="isLoading ? 'Loading...' : 'Register'"
+        />
         <div class="border-t-2 border-gray-200 bg-gray-50">
           <p class="m-4">
             Have An Account?
@@ -75,16 +80,36 @@ export default {
   data() {
     return {
       formData: {
-        fullName: null,
+        displayName: null,
         email: null,
         password: null,
         confirmPassword: null,
       },
+      isLoading: false,
     }
   },
   methods: {
-    submitHandler(data) {
+    async submitHandler(data) {
       // TODO: push new account to backend
+      if (this.isLoading) return
+
+      try {
+        this.isLoading = true
+        await this.$axios.post('/api/auth/register', data)
+        const res = await this.$fire.signInWithEmailAndPassword(
+          this.$fire.auth,
+          data.email,
+          data.password
+        )
+        localStorage.setItem('token', res.user.accessToken)
+        await this.$router.push({
+          name: 'index',
+        })
+      } catch (err) {
+        this.$formulate.handle({ formErrors: err.message }, 'login')
+      } finally {
+        this.isLoading = false
+      }
     },
   },
 }

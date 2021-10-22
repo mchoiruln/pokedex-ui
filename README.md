@@ -7,6 +7,8 @@ and name of the Pokemon. Not only that it's also show about stats and image of t
 
 ## Environment
 
+Check file .env.example, make sure you completely fill before run the App
+
 ## Development
 
 ```bash
