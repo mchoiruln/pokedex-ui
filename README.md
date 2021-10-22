@@ -7,7 +7,21 @@ and name of the Pokemon. Not only that it's also show about stats and image of t
 
 ## Environment
 
-Check file .env.example, make sure you completely fill before run the App
+Check file .env.example, make sure you completely fill before run the App.
+
+```ini
+# .env file at root project
+#url of the backend 
+BACKEND_HOST_API=http://localhost:3001
+
+#firebase configuration
+apiKey=
+authDomain=
+projectId=
+storageBucket=
+messagingSenderId=
+appId=
+```
 
 ## Development
 
@@ -18,3 +32,25 @@ $ npm run dev
 ```
 
 ## Production
+
+```bash
+$ npm install
+$ npm run generate
+# copy dist to server as static web app
+```
+
+## 3rd party library
+
+What 3rd party library we used :
+
+- Vue Formulate
+  > To create form input and support validation out of box
+- Axios
+  > To consume api backend
+- Vue-Chartjs
+  > To show statistic pokemon
+
+## Deployment
+
+- [Pokedex UI](https://pokedex-ui-nuxt.netlify.app)
+- [Pokedex API](https://pokedex-api-express.herokuapp.com/)
