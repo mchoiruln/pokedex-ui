@@ -63,7 +63,10 @@
         viewBox="0 0 24 24"
       ></svg>
     </span>
-    <div class="flex flex-wrap mt-4 items-center justify-center">
+    <div
+      v-if="!selected"
+      class="flex flex-wrap mt-4 items-center justify-center"
+    >
       <div
         v-for="(item, index) in pokemon.list"
         :key="index"
@@ -73,8 +76,16 @@
         <div class="m-2">
           <a
             v-if="item"
-            href="#"
-            class="flex self-start border rounded-lg shadow-lg bg-gray-500"
+            class="
+              flex
+              self-start
+              border
+              rounded-lg
+              shadow-lg
+              bg-gray-500
+              cursor-pointer
+            "
+            @click="selected = item"
           >
             <img width="215" height="215" :src="item.imageDetail" />
           </a>
@@ -119,7 +130,123 @@
         </div>
       </div>
     </div>
-    <div class="flex justify-center mt-10 space-x-1">
+    <div v-else>
+      <div class="flex flex-wrap mt-4 items-center justify-center">
+        <div class="flexa-0-5 p-2" style="min-width: 215px">
+          <div class="m-2">
+            <a
+              v-if="selected"
+              class="
+                flex
+                self-start
+                border
+                rounded-lg
+                shadow-lg
+                bg-gray-500
+                cursor-pointer
+              "
+            >
+              <img width="215" height="215" :src="selected.imageDetail" />
+            </a>
+            <div class="flex items-center mt-3 border p-5 bg-white">
+              <div v-if="selected.detail">
+                <div v-if="selected" class="font-bold text-4xl capitalize">
+                  {{ selected.name }}
+                </div>
+                <span class="flex items-center">
+                  <span
+                    v-if="selected && selected.detail"
+                    class="
+                      flex
+                      items-center
+                      h-8
+                      bg-indigo-200
+                      text-indigo-600 text-sm
+                      px-2
+                      rounded
+                      text-2xl
+                    "
+                    >#
+                    {{ selected.detail.id.toString().padStart(3, '0') }}</span
+                  >
+                  <span
+                    v-for="type in selected.detail.types"
+                    :key="type"
+                    class="
+                      ml-4
+                      text-xs
+                      inline-flex
+                      items-center
+                      font-bold
+                      leading-sm
+                      uppercase
+                      px-3
+                      py-1
+                      bg-green-200
+                      text-green-700
+                      rounded-2xl
+                    "
+                    >{{ type }}</span
+                  >
+                </span>
+                <div class="flex">
+                  <div>Sprites</div>
+                  <img :src="selected.detail.sprites.front_default" />
+                  <img :src="selected.detail.sprites.back_default" />
+                </div>
+                <div class="flex">
+                  <div>Stats</div>
+                  <radar-chart
+                    :chartdata="{
+                      labels: [
+                        ...selected.detail.stats.map((s) => s.stat_name),
+                      ],
+                      datasets: [
+                        {
+                          label: 'Stats',
+                          data: [
+                            ...selected.detail.stats.map((s) => s.stat_base),
+                          ],
+                          backgroundColor: 'rgb(30,144,255,0.3)',
+                        },
+                      ],
+                    }"
+                    :options="{
+                      responsive: true,
+                      tooltips: {
+                        callbacks: {
+                          title: (tooltipItem, data) =>
+                            data.labels[tooltipItem[0].index],
+                        },
+                      },
+                    }"
+                  ></radar-chart>
+                </div>
+                <div class="flex flex-col mt-4">
+                  <button
+                    class="
+                      ml-2
+                      px-4
+                      py-2
+                      rounded
+                      bg-orange-500
+                      text-white
+                      hover:bg-orange-600
+                      align-middle
+                    "
+                    @click="selected = null"
+                  >
+                    Back to list
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- <pre>{{ selected }}</pre> -->
+        </div>
+      </div>
+    </div>
+    <div v-if="!selected" class="flex justify-center mt-10 space-x-1">
       <button
         v-if="!isInfiniteScroll && !isFetching && pokemon.next"
         class="px-4 py-2 rounded bg-green-500 text-white hover:bg-green-600"
@@ -153,6 +280,7 @@ export default {
       },
       isFetching: false,
       identityPokemon: null,
+      selected: null,
     }
   },
   computed: {
@@ -184,6 +312,7 @@ export default {
     async intersected() {
       if (this.isFetching) return
       if (!this.pokemon.next) return
+      if (this.selected) return
       if (this.isInfiniteScroll) {
         await this.pushRandom()
       }
@@ -199,7 +328,7 @@ export default {
       }
     },
     async catchPokemon() {
-      console.log('catchPokemon')
+      this.selected = null
       try {
         if (this.identityPokemon === null || this.identityPokemon === '') return
 
@@ -214,12 +343,14 @@ export default {
       }
     },
     randomCatch() {
+      this.selected = null
       const random = Math.floor(Math.random() * 899) + 1
       this.identityPokemon = random
       this.catchPokemon()
     },
     async resetList() {
       this.identityPokemon = null
+      this.selected = null
       await this.fetchPokemon()
     },
     scrollToTop() {
